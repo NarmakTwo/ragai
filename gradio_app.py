@@ -60,4 +60,4 @@ with gr.Blocks(title="Memory") as demo:
     chat_ui.chatbot.clear(clear_llm, outputs=llm)
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, show_error=True)
+    demo.launch(server_name="0.0.0.0", server_port=7860, share=True)
