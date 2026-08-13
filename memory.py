@@ -138,7 +138,7 @@ _TOOLS = {
     "append_document": append_document,
     "delete_document": delete_document,
 }
-_FAKE_TOOL = re.compile(r"<function=(\w+)>\s*(\{.*?\})\s*</function>", re.S)
+_FAKE_HEAD = re.compile(r"[<(]?function=(\w+)>")
 _VERBS = dict(
     get_document=("querying memory", "question"),
     new_document=("creating document", "id"),
@@ -147,20 +147,28 @@ _VERBS = dict(
     delete_document=("deleting document", "id"),
 )
 
+def _parse_json_obj(text):
+    cleaned = text.replace("“", '"').replace("”", '"').replace("’", "'")
+    start = cleaned.find("{")
+    if start < 0:
+        return None
+    try:
+        obj, _ = json.JSONDecoder().raw_decode(cleaned[start:])
+    except json.JSONDecodeError:
+        return None
+    return obj if isinstance(obj, dict) else None
+
 def _run_fake_tools(output):
-    """Some Groq models dump tool calls as plain text XML. Execute those locally."""
+    """Groq models often dump tool calls as plain text. Execute those locally."""
     traces, results = [], []
-    for name, raw in _FAKE_TOOL.findall(output):
+    for m in _FAKE_HEAD.finditer(output or ""):
+        name = m.group(1)
         fn = _TOOLS.get(name)
         if not fn:
             continue
-        try:
-            args = json.loads(raw.replace("“", '"').replace("”", '"').replace("’", "'"))
-        except json.JSONDecodeError:
+        args = _parse_json_obj(output[m.end():])
+        if args is None:
             results.append({"error": f"could not parse args for {name}"})
-            continue
-        if not isinstance(args, dict):
-            results.append({"error": f"args for {name} must be an object"})
             continue
         out = fn(**args)
         results.append(out)
@@ -172,27 +180,39 @@ _REMEMBER = re.compile(
     r"^\s*(?:please\s+)?(?:remember|save|store|note)(?:\s+that)?\s*[:,]?\s*(.+)$",
     re.I | re.S,
 )
+_FACT_IS = re.compile(r"^\s*my\s+(.+?)\s+is\s+(.+)\s*$", re.I | re.S)
 
 def _slug(text, fallback="note"):
     parts = re.findall(r"[a-z0-9]+", text.lower())
     return ("_".join(parts[:6]) or fallback)[:48]
 
+def _save_fact(fact, doc_id=None):
+    doc_id = doc_id or _slug(fact)
+    saved = new_document(doc_id, fact)
+    if not saved.get("ok") and "already exists" in str(saved.get("error", "")):
+        saved = overwrite_document(doc_id, fact)
+        verb = "overwriting document"
+    else:
+        verb = "creating document"
+    if saved.get("ok"):
+        return "Got it — saved.", [f"{verb} {doc_id!r}"]
+    return f"Couldn't save that: {saved.get('error')}", []
+
 def run_turn(history, prompt, provider, temperature=0.7):
     history = history or []
-    # Remember/save intents: write locally first so we never wait on a stuck model call.
-    if m := _REMEMBER.match(prompt or ""):
+    text = (prompt or "").strip()
+
+    if m := _REMEMBER.match(text):
         fact = m.group(1).strip()
         if fact:
-            doc_id = _slug(fact)
-            saved = new_document(doc_id, fact)
-            if not saved.get("ok") and "already exists" in str(saved.get("error", "")):
-                saved = overwrite_document(doc_id, fact)
-                verb = "overwriting document"
-            else:
-                verb = "creating document"
-            if saved.get("ok"):
-                return "Got it — saved.", history, [f"{verb} {doc_id!r}"]
-            return f"Couldn't save that: {saved.get('error')}", history, []
+            reply, traces = _save_fact(fact)
+            return reply, history, traces
+
+    if m := _FACT_IS.match(text):
+        subject, value = m.group(1).strip(), m.group(2).strip()
+        if subject and value:
+            reply, traces = _save_fact(f"My {subject} is {value}", _slug(subject))
+            return reply, history, traces
 
     provider = provider if provider in ("GROQ", "OPENROUTER") else "GROQ"
     model = f"{provider.lower()}:{os.getenv(f'{provider}_MODEL')}"
@@ -215,18 +235,18 @@ def run_turn(history, prompt, provider, temperature=0.7):
         for p in m.parts
         if isinstance(p, ToolCallPart)
     ]
-    if "<function=" in output:
+    if "function=" in output:
         fake_traces, tool_results = _run_fake_tools(output)
         traces.extend(fake_traces)
         if tool_results:
             oks = [r for r in tool_results if isinstance(r, dict) and r.get("ok")]
             errs = [r for r in tool_results if isinstance(r, dict) and r.get("error")]
             hits = [r for r in tool_results if isinstance(r, dict) and "hits" in r]
-            if hits and not oks:
+            if oks and not errs:
+                output = "Got it — saved."
+            elif hits and not oks:
                 lines = [f"- {h['id']}: {h['document']}" for r in hits for h in r.get("hits") or []]
                 output = "Here's what I found:\n" + ("\n".join(lines) if lines else "(nothing stored yet)")
-            elif oks and not errs:
-                output = "Got it — saved."
             elif errs and not oks:
                 output = "Couldn't save that: " + "; ".join(e["error"] for e in errs)
             else:
