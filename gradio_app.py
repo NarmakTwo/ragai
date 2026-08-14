@@ -241,7 +241,7 @@ def clear_llm():
     return []
 
 
-with gr.Blocks(title="NoteGPT - Documents") as document_menu:
+with gr.Blocks(title="NoteGPT - Documents", theme=gr.Theme.from_hub("NeoPy/shadowthedgehog")) as document_menu:
     stored_uid = gr.BrowserState("", storage_key="ragai_user_id", secret="ragai-memory-user")
     edit_id = gr.BrowserState("", storage_key="ragai_edit_id", secret="ragai-memory-user")
     uid_box = gr.Textbox(visible=False, show_label=False)
