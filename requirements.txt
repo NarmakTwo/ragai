@@ -1,0 +1,10 @@
+# Runtime deps for Streamlit Community Cloud (streamlit_app.py)
+streamlit>=1.62.0
+chromadb>=1.5.9
+langcodes[data]>=3.5.1
+python-dotenv>=1.0.0
+pydantic>=2.0
+pydantic-ai[groq]>=2.29.0
+translate>=3.8.1
+markitdown[docx,pdf,pptx,xlsx,xls,outlook]>=0.1.7
+openai>=2.54.0
