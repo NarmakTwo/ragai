@@ -554,4 +554,4 @@ with document_menu.route("Chat", "/chat"):
     chat_ui.chatbot.clear(clear_llm, outputs=llm)
 
 if __name__ == "__main__":
-    document_menu.launch(server_name="0.0.0.0", server_port=7860, share=True, footer_links=["settings"])
+    document_menu.launch(server_name="0.0.0.0", server_port=7860, share=False, footer_links=["settings"])
