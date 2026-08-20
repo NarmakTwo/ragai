@@ -1,0 +1,74 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - link "description Documents" [ref=e13] [cursor=pointer]:
+          - /url: http://localhost:8501/
+          - generic [ref=e14]: description
+          - paragraph [ref=e19]: Documents
+        - link "edit_note Editor" [ref=e23] [cursor=pointer]:
+          - /url: http://localhost:8501/editor
+          - generic [ref=e24]: edit_note
+          - paragraph [ref=e29]: Editor
+        - link "chat Chat" [ref=e33] [cursor=pointer]:
+          - /url: http://localhost:8501/chat
+          - generic [ref=e34]: chat
+          - paragraph [ref=e39]: Chat
+      - generic [ref=e40]:
+        - button "Deploy" [ref=e42] [cursor=pointer]
+        - button "Main menu" [ref=e46] [cursor=pointer]
+  - generic [ref=e50]:
+    - heading "NoteGPT Documents" [level=2] [ref=e55]:
+      - text: NoteGPT Documents
+      - generic [ref=e56]:
+        - link "Link to heading":
+          - /url: "#note-gpt-documents"
+    - generic [ref=e58]:
+      - paragraph [ref=e62]: Search
+      - textbox "Search" [ref=e65]:
+        - /placeholder: Match id or text…
+    - generic [ref=e67]:
+      - paragraph [ref=e71]: Add
+      - textbox "Add" [ref=e73]:
+        - /placeholder: Write or paste text, or import a file.
+        - text: "Playwright test memory: I love espresso."
+    - generic [ref=e75]:
+      - paragraph [ref=e79]: Import files
+      - region "Import files" [ref=e80] [cursor=pointer]:
+        - button "file upload"
+        - button "upload Upload" [ref=e82]:
+          - generic [ref=e84]:
+            - generic [ref=e85]: upload
+            - paragraph [ref=e89]: Upload
+        - generic [ref=e90]: 200MB per file • text, TXT, MD, MARKDOWN, JSON, JSONL, CSV, HTML, XML, RSS, ATOM, LOG, RST, PY, DOCX, PDF, PPTX, XLSX, XLS, EPUB, IPYNB, MSG, ZIP, JPG, PNG, WAV, MP3, M4A, MP4, WEBM, OGG, FLAC, MPG, MPGA
+    - button [active] [ref=e95] [cursor=pointer]:
+      - paragraph [ref=e100]: Save
+    - alert [ref=e196]:
+      - generic [ref=e198]:
+        - paragraph [ref=e201]:
+          - strong [ref=e202]: streamlit.errors.StreamlitAPIException
+          - text: ":"
+          - code [ref=e203]: st.session_state.add_bar
+          - text: cannot be modified after the widget with key
+          - code [ref=e204]: add_bar
+          - text: is instantiated.
+        - generic [ref=e205]:
+          - generic [ref=e206]: "Traceback:"
+          - code [ref=e209]:
+            - generic [ref=e210]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136, in exec_func_with_error_handling result = func()
+            - generic [ref=e211]: "File \"C:\\Users\\Kamran Oliver\\Documents\\dev\\ragai\\.venv\\Lib\\site-packages\\streamlit\\runtime\\scriptrunner\\script_runner.py\", line 837, in code_to_exec exec(code, module.__dict__) # noqa: S102 ~~~~^^^^^^^^^^^^^^^^^^^^^^^"
+            - generic [ref=e212]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\streamlit_app.py", line 42, in <module> page.run() ~~~~~~~~^^
+            - generic [ref=e213]: "File \"C:\\Users\\Kamran Oliver\\Documents\\dev\\ragai\\.venv\\Lib\\site-packages\\streamlit\\navigation\\page.py\", line 479, in run exec(code, module.__dict__) # noqa: S102 ~~~~^^^^^^^^^^^^^^^^^^^^^^^"
+            - generic [ref=e214]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\app_pages\documents.py", line 54, in <module> st.session_state.add_bar = "" ^^^^^^^^^^^^^^^^^^^^^^^^
+            - generic [ref=e215]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 628, in wrapped_func result = non_optional_func(*args, **kwargs)
+            - generic [ref=e216]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\state\session_state_proxy.py", line 136, in __setattr__ self[key] = value ~~~~^^^^^
+            - generic [ref=e217]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 628, in wrapped_func result = non_optional_func(*args, **kwargs)
+            - generic [ref=e218]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\state\session_state_proxy.py", line 114, in __setitem__ get_session_state()[key] = value ~~~~~~~~~~~~~~~~~~~^^^^^
+            - generic [ref=e219]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\state\safe_session_state.py", line 109, in __setitem__ self._state[key] = value ~~~~~~~~~~~^^^^^
+            - generic [ref=e220]: File "C:\Users\Kamran Oliver\Documents\dev\ragai\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py", line 800, in __setitem__ raise StreamlitAPIException( ...<2 lines>... )
+        - generic [ref=e221]:
+          - button "Copy" [ref=e222] [cursor=pointer]
+          - link "Ask Google" [ref=e223] [cursor=pointer]:
+            - /url: https://www.google.com/search?q=streamlit.errors.StreamlitAPIException%3A%20%60st.session_state.add_bar%60%20cannot%20be%20modified%20after%20the%20widget%20with%20key%20%60add_bar%60%20is%20instantiated.
+          - link "Ask ChatGPT" [ref=e224] [cursor=pointer]:
+            - /url: https://chatgpt.com/?q=streamlit.errors.StreamlitAPIException%3A%20%60st.session_state.add_bar%60%20cannot%20be%20modified%20after%20the%20widget%20with%20key%20%60add_bar%60%20is%20instantiated.%0A%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cscriptrunner%5Cexec_code.py%22%2C%20line%20136%2C%20in%20exec_func_with_error_handling%0A%20%20%20%20result%20%3D%20func()%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cscriptrunner%5Cscript_runner.py%22%2C%20line%20837%2C%20in%20code_to_exec%0A%20%20%20%20exec(code%2C%20module.__dict__)%20%20%23%20noqa%3A%20S102%0A%20%20%20%20~~~~%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5Cstreamlit_app.py%22%2C%20line%2042%2C%20in%20%3Cmodule%3E%0A%20%20%20%20page.run()%0A%20%20%20%20~~~~~~~~%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cnavigation%5Cpage.py%22%2C%20line%20479%2C%20in%20run%0A%20%20%20%20exec(code%2C%20module.__dict__)%20%20%23%20noqa%3A%20S102%0A%20%20%20%20~~~~%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5Capp_pages%5Cdocuments.py%22%2C%20line%2054%2C%20in%20%3Cmodule%3E%0A%20%20%20%20st.session_state.add_bar%20%3D%20%22%22%0A%20%20%20%20%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cmetrics_util.py%22%2C%20line%20628%2C%20in%20wrapped_func%0A%20%20%20%20result%20%3D%20non_optional_func(*args%2C%20**kwargs)%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cstate%5Csession_state_proxy.py%22%2C%20line%20136%2C%20in%20__setattr__%0A%20%20%20%20self%5Bkey%5D%20%3D%20value%0A%20%20%20%20~~~~%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cmetrics_util.py%22%2C%20line%20628%2C%20in%20wrapped_func%0A%20%20%20%20result%20%3D%20non_optional_func(*args%2C%20**kwargs)%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cstate%5Csession_state_proxy.py%22%2C%20line%20114%2C%20in%20__setitem__%0A%20%20%20%20get_session_state()%5Bkey%5D%20%3D%20value%0A%20%20%20%20~~~~~~~~~~~~~~~~~~~%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cstate%5Csafe_session_state.py%22%2C%20line%20109%2C%20in%20__setitem__%0A%20%20%20%20self._state%5Bkey%5D%20%3D%20value%0A%20%20%20%20~~~~~~~~~~~%5E%5E%5E%5E%5E%0AFile%20%22C%3A%5CUsers%5CKamran%20Oliver%5CDocuments%5Cdev%5Cragai%5C.venv%5CLib%5Csite-packages%5Cstreamlit%5Cruntime%5Cstate%5Csession_state.py%22%2C%20line%20800%2C%20in%20__setitem__%0A%20%20%20%20raise%20StreamlitAPIException(%0A%20%20%20%20...%3C2%20lines%3E...%0A%20%20%20%20)
