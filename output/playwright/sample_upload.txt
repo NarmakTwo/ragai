@@ -1,4 +1,0 @@
-Playwright upload test document.
-
-This is a long enough body to count as a document rather than a short memory,
-so the Documents section should show it after import and save.
