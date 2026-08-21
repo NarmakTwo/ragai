@@ -24,9 +24,27 @@ _CONTEXT_CHARS = 10000
 _MEMORY_MAX = 200
 _SAVED_MEMORY_MAX = 10
 
+def _on_streamlit_cloud():
+    return (
+        os.path.isdir("/mount/src")
+        or os.environ.get("STREAMLIT_RUNTIME_ENV") == "cloud"
+        or bool(os.environ.get("STREAMLIT_SHARING_MODE"))
+    )
+
+def _chroma_path():
+    override = (os.environ.get("CHROMA_PATH") or "").strip()
+    if override:
+        return override
+    # Streamlit Cloud: repo mount is unreliable for Chroma's Rust/HNSW files;
+    # use a fresh writable path under /tmp instead of checked-in Windows chroma_data.
+    if _on_streamlit_cloud():
+        return "/tmp/ragai_chroma"
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "chroma_data")
+
 @lru_cache(maxsize=1)
 def load_db():
     import hashlib
+    import shutil
     import chromadb
     from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 
@@ -40,7 +58,33 @@ def load_db():
                 out.append([((digest[i % 32] / 127.5) - 1.0) for i in range(384)])
             return out
 
-    return chromadb.PersistentClient("./chroma_data"), HashEmbed()
+    embedder = HashEmbed()
+    path = _chroma_path()
+
+    def _persistent(p):
+        os.makedirs(p, exist_ok=True)
+        return chromadb.PersistentClient(path=p)
+
+    try:
+        client = _persistent(path)
+        # Probe collection create early so we can recover from corrupt on-disk state.
+        probe = "ragai_boot_probe"
+        client.get_or_create_collection(name=probe, embedding_function=embedder)
+        try:
+            client.delete_collection(probe)
+        except Exception:
+            pass
+        return client, embedder
+    except Exception:
+        # Wipe and retry once (common when a host-incompatible chroma dir was deployed).
+        try:
+            if os.path.isdir(path):
+                shutil.rmtree(path, ignore_errors=True)
+            client = _persistent(path)
+            return client, embedder
+        except Exception:
+            # Last resort: in-memory (session-local) so the app still boots on Cloud.
+            return chromadb.EphemeralClient(), embedder
 
 def collection():
     client, embedder = load_db()
