@@ -171,6 +171,7 @@ agent = Agent(
         "If the prompt contains saved_memories, those facts are already loaded; use them before searching. "
         "When they ask what you know or about a fact, call get_document. "
         "Do not overwrite or delete without permission. "
+        "before answering ANY prompt, use the get_document tool to semantically search for any relevant user-provided information about the query."
         "Tool rules: never pass an empty question; max_results must be 1-50; never pass empty id or document. "
         "To list broadly, get_document with question \"everything\" and max_results 50. "
         "Never write fake tool XML like <function=...>; only use real tool calls."
@@ -191,11 +192,11 @@ _TOOLS = {
 }
 _FAKE_HEAD = re.compile(r"[<(]?function=(\w+)>")
 _VERBS = dict(
-    get_document=("querying memory", "question"),
-    new_document=("creating document", "id"),
-    overwrite_document=("overwriting document", "id"),
-    append_document=("appending to document", "id"),
-    delete_document=("deleting document", "id"),
+    get_document=("querying note(s)", "question"),
+    new_document=("creating note", "id"),
+    overwrite_document=("overwriting note", "id"),
+    append_document=("appending to note", "id"),
+    delete_document=("deleting note", "id"),
 )
 
 def _parse_json_obj(text):
